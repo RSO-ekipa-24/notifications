@@ -1,7 +1,7 @@
 package notifications.service;
 
 import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
+import io.quarkus.mailer.reactive.ReactiveMailer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -12,7 +12,7 @@ public class WelcomeMailerService {
     private static final Logger LOGGER = Logger.getLogger(WelcomeMailerService.class);
 
     @Inject
-    Mailer mailer;
+    ReactiveMailer mailer;
 
     public void sendWelcome(String to, String username) {
         if (to == null || to.isBlank()) {
@@ -22,21 +22,19 @@ public class WelcomeMailerService {
 
         String safeName = (username == null || username.isBlank()) ? "there" : username.trim();
 
-        try {
-            mailer.send(
-                    Mail.withText(
-                            to.trim(),
-                            "Welcome to our app",
-                            "Hi " + safeName + ",\n\n" +
-                                    "Welcome to our app!\n" +
-                                    "We're happy to have you.\n\n" +
-                                    "Cheers,\n" +
-                                    "ESSA Team"
-                    )
-            );
-            LOGGER.infof("Welcome email queued for sending to %s (username=%s)", to.trim(), safeName);
-        } catch (Exception e) {
-            LOGGER.errorf(e, "Failed to send welcome email to %s (username=%s)", to.trim(), safeName);
-        }
+        mailer.send(
+                Mail.withText(
+                        to.trim(),
+                        "Welcome to our app",
+                        "Hi " + safeName + ",\n\n" +
+                                "Welcome to our app!\n" +
+                                "We're happy to have you.\n\n" +
+                                "Cheers,\n" +
+                                "ESSA Team"
+                )
+        ).subscribe().with(
+                ignored -> LOGGER.infof("Welcome email sent to %s (username=%s)", to.trim(), safeName),
+                err -> LOGGER.errorf(err, "Failed to send welcome email to %s (username=%s)", to.trim(), safeName)
+        );
     }
 }
