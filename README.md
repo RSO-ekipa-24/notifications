@@ -4,6 +4,16 @@
 
 Right now, this service emails you after you create an account. In later stages, this service will be upgraded to send email notifications when you rent a property, when you receive a message inside the app etc.
 
+### Branching Strategy
+
+- main: The production-ready branch.
+- dev: The integration branch for features and fixes, often considered the "next release" branch.
+- feature/: Branches for developing new features. These branches are created from dev and merged back into dev when the feature is complete.
+- bugfix/: Branches for fixing bugs in the dev branch.
+- release/: Branches for preparing a new production release. These branches allow for last-minute fixes and preparing release notes.
+- hotfix/: Branches for fixing critical issues in the main branch. These are created from main and merged back into both main and dev.
+
+
 ## Technology stack :computer:
 
 | Category                  | Technology / Tool           |
@@ -84,7 +94,6 @@ If you want to learn more about building native executables, please consult <htt
 Easily start your REST Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
-
 
 
 ## Build and push the image to Google Registry :whale: 
