@@ -1,0 +1,22 @@
+notifications:
+
+  deployment:
+    replicaCount: 1
+    name: notifications-service
+
+    image:
+      repository: europe-central2-docker.pkg.dev/artful-reactor-351917/essa-images/notifications-service
+      tag: "latest"
+      pullPolicy: IfNotPresent
+      containerPort: 6970
+
+  service:
+    serviceName: notifications-service
+    type: ClusterIP
+    port: 8080
+    targetPort: 6970
+
+
+  secrets:
+    name: notifications-secrets
+    quarkusMailerPassword: QUARKUS_MAILER_PASSWORD

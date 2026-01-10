@@ -1,0 +1,20 @@
+## 🎉 Notifications Installation Successful!
+
+### Notifications Status Check
+You can monitor the status of the Notifications Deployment using the following command:
+$ kubectl get deployment notifications-service -n essa-project
+
+
+### Monitoring Certificate Status:
+You must wait for the Managed Certificate to become ACTIVE  before the hostname will resolve.
+$ kubectl get managecertificate
+$ kubectl describe managedcertificate <certificate-name> -n essa-project
+
+### Important Credentials
+
+Your credentials are stored in the Secret **{{ .Values.notifications.secrets.name }}**.
+
+
+### BackendConfig provides health checks and other GKE-specific backend settings for notifications-service
+
+---

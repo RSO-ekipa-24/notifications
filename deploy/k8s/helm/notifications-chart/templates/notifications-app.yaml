@@ -1,0 +1,86 @@
+# Notifications app deployment
+{{/*apiVersion: v1*/}}
+{{/*kind: Service*/}}
+{{/*metadata:*/}}
+{{/*  name: {{ .Values.notifications.service.serviceName }}*/}}
+{{/*  annotations:*/}}
+{{/*    cloud.google.com/backend-config: '{"default": "files-backend-config"}'*/}}
+{{/*    cloud.google.com/neg: '{"ingress": true}'*/}}
+{{/*spec:*/}}
+{{/*  selector:*/}}
+{{/*    app: {{ .Values.notifications.service.serviceName }}*/}}
+{{/*  ports:*/}}
+{{/*    - protocol: TCP*/}}
+{{/*      port: {{ .Values.notifications.service.port }}*/}}
+{{/*      targetPort: {{ .Values.notifications.service.targetPort }}*/}}
+{{/*  type: {{ .Values.notifications.service.type }}*/}}
+
+{{/*---*/}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.notifications.deployment.name }}
+spec:
+  replicas: {{ .Values.notifications.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.notifications.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.notifications.deployment.name }}
+    spec:
+      containers:
+        - name: {{ .Values.notifications.deployment.name }}
+          image: "{{ .Values.notifications.deployment.image.repository }}:{{ .Values.notifications.deployment.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.notifications.deployment.image.containerPort }}
+          env:
+
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "myproperty-kafka-kafka-bootstrap:9092"
+
+            - name: QUARKUS_MAILER_HOST
+              value: "smtp.gmail.com"
+
+            - name: QUARKUS_MAILER_PORT
+              value: "587"
+
+            - name: QUARKUS_MAILER_START_TLS
+              value: "REQUIRED"
+
+            - name: QUARKUS_MAILER_FROM
+              value: "essa.cns@gmail.com"
+
+            - name: QUARKUS_MAILER_USERNAME
+              value: "essa.cns@gmail.com"
+
+            - name: QUARKUS_MAILER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.notifications.secrets.name }}
+                  key: {{ .Values.notifications.secrets.quarkusMailerPassword }}
+
+
+          # health checks
+          startupProbe:
+            httpGet:
+              path: /q/health/started
+              port: 6970
+            initialDelaySeconds: 15
+            failureThreshold: 20
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: 6970
+            initialDelaySeconds: 20
+            periodSeconds: 30
+
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: 6970
+            initialDelaySeconds: 20

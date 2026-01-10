@@ -70,6 +70,12 @@
             <artifactId>quarkus-container-image-docker</artifactId>
         </dependency>
 
+        <!-- Health checks-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-health</artifactId>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>io.quarkus</groupId>
