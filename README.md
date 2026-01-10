@@ -1,4 +1,28 @@
-# notifications
+# Notifications :rotating_light:
+
+## Overview
+
+Right now, this service emails you after you create an account. In later stages, this service will be upgraded to send email notifications when you rent a property, when you receive a message inside the app etc.
+
+## Technology stack :computer:
+
+| Category                  | Technology / Tool           |
+|----------------------------|----------------------------|
+| Backend framework          | Quarkus                    |
+| Messaging / Event streaming| Apache Kafka               |
+| Build tool                 | Maven                      |
+| Containerization           | Docker                     |
+| CI/CD Automation           | GitHub Actions             |
+
+
+## Microservice relations
+
+This service is a backend microservice that only communicates via Kafka.  
+It does not expose any REST endpoints to external clients and has no direct dependencies on other microservices.
+
+---
+
+## Running the application
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -62,7 +86,8 @@ Easily start your REST Web Services
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
 
 
-#### Build and push the image to Google Registry:
+
+## Build and push the image to Google Registry :whale: 
 
 
 First, you need to commit and push all the changes u made to Git!
@@ -96,7 +121,7 @@ docker build -f src/main/docker/Dockerfile.jvm -t europe-central2-docker.pkg.dev
 docker push europe-central2-docker.pkg.dev/artful-reactor-351917/essa-images/notifications-service:$GIT_HASH
 ```
 
-### Deploy via helm chart
+## Deploy via helm chart :arrow_up:
 
 Move to `notifications/deploy/k8s/helm` and run:
 
